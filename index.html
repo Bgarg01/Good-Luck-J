@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Good Luck Jar</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #ffe5ec, #e0f7fa);
+      padding: 2rem;
+      text-align: center;
+    }
+    h1 {
+      color: #a25c43;
+    }
+    select {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
+    .note {
+      background: #fff8f0;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      width: 320px;
+      margin: 2rem auto 0;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    .note-content {
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <h1>Your Good Luck Jar</h1>
+  <p>Feeling something jaanu your bhavu has got you covered 💌</p>
+  <select id="emotionSelect" onchange="generateNote()">
+    <option value="">-- Select an Emotion --</option>
+    <option value="nervous">Feeling Nervous</option>
+    <option value="miss">Missing Someone</option>
+    <option value="firstday">First Day Jitters</option>
+    <option value="smile">Need a Smile?</option>
+    <option value="overwhelmed">Overwhelmed?</option>
+    <option value="hug">Need a Hug?</option>
+    <option value="confidence">Low Confidence?</option>
+    <option value="lost">Feeling Lost?</option>
+    <option value="lonely">Feeling Lonely</option>
+    <option value="excited">Excited but Anxious</option>
+  </select>
+
+  <div id="noteContainer"></div>
+
+  <script>
+    const emotionNotes = {
+      nervous: [
+        "Take a deep breath, jaan. You’ve got this, always have, always will.",
+        "Remember how far you've come. Trust yourself, I trust you.",
+        "It’s okay to be nervous—it means you care. You’re going to do amazing."
+      ],
+      miss: [
+        "You're on my mind more than you know. Always here, always yours.",
+        "Distance means so little when someone means so much. I'm just a heartbeat away.",
+        "Even miles apart, you're never alone. I'm right there in your pocket, jaan."
+      ],
+      firstday: [
+        "You are more ready than you feel. Own the room like you always do!",
+        "Everyone starts somewhere—and your somewhere starts with stardust.",
+        "You were made for this. First days become best days, you'll see."
+      ],
+      smile: [
+        "Here's your reminder to smile like the world is yours—because it is.",
+        "You’ve got the kind of smile that makes clouds jealous.",
+        "You’re my reason to smile. Let this remind you of how amazing you are."
+      ],
+      overwhelmed: [
+        "One breath, one step, one thing at a time. You’ve got this, baby.",
+        "It’s okay to pause. You don’t have to do it all at once.",
+        "Even storms pass. You are calm in chaos and light in the dark."
+      ],
+      hug: [
+        "Sending you a warm, snuggly hug through the screen. Feel it? That’s me.",
+        "Close your eyes and imagine us holding hands. You’re safe.",
+        "This note = one tight hug + all my love."
+      ],
+      confidence: [
+        "You are powerful, smart, and unstoppable. Believe it, jaan.",
+        "There’s nothing you can’t handle. You’ve proved it over and over.",
+        "Confidence looks good on you. Put it on and slay today."
+      ],
+      lost: [
+        "Sometimes not knowing is where the magic begins. Keep going.",
+        "Every step forward, even unsure ones, are part of your story.",
+        "You’re never truly lost when your heart knows the way."
+      ],
+      lonely: [
+        "You are deeply loved. My heart is always with you.",
+        "Even alone, you shine so bright. I see you. I love you.",
+        "Wrap this note around you like a blanket of love."
+      ],
+      excited: [
+        "Butterflies mean growth. You’re blooming beautifully.",
+        "New beginnings can be scary—but you were born to start things.",
+        "Channel that excitement into magic. You're unstoppable."
+      ]
+    };
+
+    let lastShown = {};
+
+    function generateNote() {
+      const selectedEmotion = document.getElementById("emotionSelect").value;
+      const noteContainer = document.getElementById("noteContainer");
+      noteContainer.innerHTML = "";
+
+      if (selectedEmotion && emotionNotes[selectedEmotion]) {
+        const quotes = emotionNotes[selectedEmotion];
+        let index;
+
+        do {
+          index = Math.floor(Math.random() * quotes.length);
+        } while (quotes.length > 1 && lastShown[selectedEmotion] === index);
+
+        lastShown[selectedEmotion] = index;
+
+        const quote = quotes[index];
+        const noteDiv = document.createElement("div");
+        noteDiv.className = "note";
+        noteDiv.innerHTML = `<strong>${document.getElementById("emotionSelect").options[document.getElementById("emotionSelect").selectedIndex].text}</strong>
+                              <div class="note-content">${quote}</div>`;
+        noteContainer.appendChild(noteDiv);
+
+        // Store selected emotion in localStorage
+        localStorage.setItem('lastEmotion', selectedEmotion);
+        localStorage.setItem('lastIndex', index);
+      }
+    }
+
+    window.onload = function() {
+      const lastEmotion = localStorage.getItem('lastEmotion');
+      const lastIndex = localStorage.getItem('lastIndex');
+
+      if (lastEmotion && emotionNotes[lastEmotion]) {
+        document.getElementById("emotionSelect").value = lastEmotion;
+        lastShown[lastEmotion] = parseInt(lastIndex);
+        generateNote();
+      }
+    };
+  </script>
+</body>
+</html>
